@@ -1,0 +1,14 @@
+{
+    "name": "Twit Clean",
+    "version": "0.0.1",
+    "description": "Clean up unwanted tweets",
+    "content_scripts": [
+        {
+            "matches": ["*://twitter.com/*"],
+            "js": ["js/twit_clean.js"],
+            "css": ["css/twit_clean.css"]
+        }
+    ],
+
+    "manifest_version": 2
+}

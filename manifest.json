@@ -5,10 +5,11 @@
     "content_scripts": [
         {
             "matches": ["*://twitter.com/*"],
-            "js": ["js/twit_clean.js"],
+            "js": ["js/twit_clean.js", "js/settings.js"],
             "css": ["css/twit_clean.css"]
         }
     ],
+    "web_accessible_resources" : ["html/rhsSettings.html"],
 
     "manifest_version": 2
 }

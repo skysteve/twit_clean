@@ -1,15 +1,18 @@
 var arrElements = [
     {
         query: ".js-recommended-followers",
-        parent : true
+        parent : true,
+        setting : "hideFollow"
     },
     {
         query: ".import-prompt",
-        parent : false
+        parent : false,
+        setting : "hidePrompt"
     },
     {
         query: ".js-items-container",
-        parent : true
+        parent : true,
+        setting : "hideFooter"
     }
 ];
 
@@ -17,11 +20,22 @@ var blockUsers = [
     "@samsmithworld"
 ];
 
-var blockHashTags = [
-    "#FreedomToMakeaStatement",
-    "#UnionJForever"
-];
+var xhr = new XMLHttpRequest();
 
+xhr.open("GET", chrome.extension.getURL("html/rhsSettings.html"), true);
+xhr.onload = function (e) {
+    if (this.status === 200) {
+        var div = document.createElement("div");
+        div.innerHTML = e.target.responseText;
+        document.querySelector(".dashboard.dashboard-right").appendChild(div);
+
+        tc_elForm = document.querySelector("#twitCleanSettings");
+        tc_elForm.addEventListener("submit", tc_fnSaveSettings, false);
+        tc_fnSetupForm();
+    }
+};
+
+xhr.send();
 
 /**
  * Created by steve on 26/05/2014.
@@ -43,6 +57,9 @@ function twit_clean_fnCallback(mutations) {
 
     arrElements.forEach(function (objQuery) {
         var el = docFrag.querySelector(objQuery.query);
+        if (!tc_objSettings[objQuery.setting]) {
+            return;
+        }
 
         //if no match - bail out
         if (!el) {
@@ -75,7 +92,7 @@ function twit_clean_fnCallback(mutations) {
         i,
         el;
 
-    for (i=0; i < arrElUsers.length; i++) {
+    for (i = 0; i < arrElUsers.length; i++) {
         el = arrElUsers[i];
 
         blockUsers.forEach(function (strUser) {
@@ -87,22 +104,22 @@ function twit_clean_fnCallback(mutations) {
         });
     }
 
-
     var arrElHashtags = document.querySelectorAll(".twitter-hashtag");
 
-    for (i=0; i < arrElHashtags.length; i++) {
-        el = arrElHashtags[i];
+    if (tc_objSettings.ignoreHashes) {
+        for (i = 0; i < arrElHashtags.length; i++) {
+            el = arrElHashtags[i];
 
-        blockHashTags.forEach(function (strHashTag) {
-            if (el.textContent.toLowerCase() === strHashTag.toLowerCase()) {
-                el = el.parentElement.parentElement.parentElement;
+            tc_objSettings.ignoreHashes.forEach(function (strHashTag) {
+                if (el.textContent.toLowerCase() === strHashTag.toLowerCase().trim()) {
+                    el = el.parentElement.parentElement.parentElement;
 
-                el.parentElement.removeChild(el);
-            }
-        });
+                    el.parentElement.removeChild(el);
+                }
+            });
+        }
     }
 }
-
 
 var observer = new MutationObserver(twit_clean_fnCallback),
     elTarget = document,

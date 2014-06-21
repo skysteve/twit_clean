@@ -5,3 +5,11 @@
 .promoted-account {
     display: none;
 }
+
+.wtf-module {
+    display: none;
+}
+
+.wtf-module.has-content {
+    display: none;
+}

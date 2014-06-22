@@ -33,6 +33,9 @@ users are of little interest to me so I wanted to filter them out.
 3. load unpacked extension
 
 
+# Bugs and requests
+Please raise all bugs and feature requests at https://github.com/skysteve/twit_clean/issues
+
 [1]: chrome://extensions/
 [2]: https://twitter.com/BarclaysOnline
 [3]: https://twitter.com/hashtag/freedomtomakeastatement?f=realtime

@@ -6,8 +6,14 @@ var strStorageKey = "twitClean_settings",
     tc_elForm = document.querySelector("#twitCleanSettings");
 
 tc_objSettings = tc_objSettings ? JSON.parse(tc_objSettings) : {};
+//go and load the settings panel and do an initial page cleanup from our settings
 tc_LoadSettings();
+tc_cleanPage();
 
+/**
+ * Function to save data from the settings form into local storage
+ * @returns {boolean} always false to stop form submitting
+ */
 function tc_fnSaveSettings() {
     var el = tc_elForm.querySelector("#cbHideFollow");
     tc_objSettings.hideFollow = el.checked;
@@ -18,6 +24,7 @@ function tc_fnSaveSettings() {
     el = tc_elForm.querySelector("#cbHideFooter");
     tc_objSettings.hideFooter = el.checked;
 
+
     el = tc_elForm.querySelector("#taIgnoreHash");
     tc_objSettings.ignoreHashes = el.value.split(",");
 
@@ -25,19 +32,27 @@ function tc_fnSaveSettings() {
     tc_objSettings.ignoreUsers = el.value.split(",");
 
 
+    //do the save
     localStorage.setItem(strStorageKey, JSON.stringify(tc_objSettings));
 
+    //refresh the content in page
     tc_cleanPage();
 
-    document.querySelector("#divAlertSaved").setAttribute("style", "margin-top:10px");
+    //show success message & clear after 4 seconds
+    el = document.querySelector("#divAlertSaved");
+    el.setAttribute("style", "margin-top:10px");
 
     setTimeout(function () {
-        document.querySelector("#divAlertSaved").setAttribute("style", "display: none; margin-top:10px");
+        el.setAttribute("style", "display: none; margin-top:10px");
     }, 4000);
 
     return false;
 }
 
+/**
+ * Here we set the settings in the form to the values we have
+ * stored (if any)
+ */
 function tc_fnSetupForm() {
     var el;
 

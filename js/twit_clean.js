@@ -16,10 +16,6 @@ var arrElements = [
     }
 ];
 
-var blockUsers = [
-    "@samsmithworld"
-];
-
 var xhr = new XMLHttpRequest();
 
 xhr.open("GET", chrome.extension.getURL("html/rhsSettings.html"), true);
@@ -92,16 +88,18 @@ function twit_clean_fnCallback(mutations) {
         i,
         el;
 
-    for (i = 0; i < arrElUsers.length; i++) {
-        el = arrElUsers[i];
+    if (tc_objSettings.ignoreUsers) {
+        for (i = 0; i < arrElUsers.length; i++) {
+            el = arrElUsers[i];
 
-        blockUsers.forEach(function (strUser) {
-            if (el.textContent.toLowerCase() === strUser.toLowerCase()) {
-                el = el.parentElement.parentElement.parentElement.parentElement;
+            tc_objSettings.ignoreUsers.forEach(function (strUser) {
+                if (el.textContent.toLowerCase() === strUser.toLowerCase()) {
+                    el = el.parentElement.parentElement.parentElement.parentElement;
 
-                el.parentElement.removeChild(el);
-            }
-        });
+                    el.parentElement.removeChild(el);
+                }
+            });
+        }
     }
 
     var arrElHashtags = document.querySelectorAll(".twitter-hashtag");

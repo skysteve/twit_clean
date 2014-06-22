@@ -20,6 +20,9 @@ function tc_fnSaveSettings() {
     el = tc_elForm.querySelector("#taIgnoreHash");
     tc_objSettings.ignoreHashes = el.value.split(",");
 
+    el = tc_elForm.querySelector("#taIgnoreUsers");
+    tc_objSettings.ignoreUsers = el.value.split(",");
+
 
     localStorage.setItem(strStorageKey, JSON.stringify(tc_objSettings));
     return false;
@@ -46,5 +49,10 @@ function tc_fnSetupForm() {
     if (tc_objSettings.ignoreHashes) {
         el = tc_elForm.querySelector("#taIgnoreHash");
         el.value = tc_objSettings.ignoreHashes.join(",");
+    }
+
+    if (tc_objSettings.ignoreUsers) {
+        el = tc_elForm.querySelector("#taIgnoreUsers");
+        el.value = tc_objSettings.ignoreUsers.join(",");
     }
 }

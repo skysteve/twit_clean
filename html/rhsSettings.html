@@ -3,6 +3,7 @@
 
     <div class="flex-module-header">
         <h3>Twit clean settings</h3>
+        <button class="pull-right btn" id="btnTCSave" type="submit">Save</button>
     </div>
 
     <div class="flex-module-inner" style="opacity: 1;">
@@ -15,7 +16,9 @@
             <textarea id="taIgnoreHash" placeholder="Ignore specific hash tags (e.g. #1D, #5SOS"></textarea>
             <textarea id="taIgnoreUsers" placeholder="Ignore specific users (e.g. @1direction"></textarea>
             <br/>
-            <button class="pull-right" type="submit">Save</button>
+            <div class="alert alert-success" id="divAlertSaved" style="margin-top:10px; display: none;">
+                <p>Settings saved</p>
+            </div>
             <br/>
             <p>Developed by <a href="/skyste">@skyste</a></p>
         </form>

@@ -1,4 +1,4 @@
-var arrElements = [
+var tc_arrElements = [
     {
         query: ".js-recommended-followers",
         parent : true,
@@ -16,25 +16,8 @@ var arrElements = [
     }
 ];
 
-var xhr = new XMLHttpRequest();
-
-xhr.open("GET", chrome.extension.getURL("html/rhsSettings.html"), true);
-xhr.onload = function (e) {
-    if (this.status === 200) {
-        var div = document.createElement("div");
-        div.innerHTML = e.target.responseText;
-        document.querySelector(".dashboard.dashboard-right").appendChild(div);
-
-        tc_elForm = document.querySelector("#twitCleanSettings");
-        tc_elForm.addEventListener("submit", tc_fnSaveSettings, false);
-        tc_fnSetupForm();
-    }
-};
-
-xhr.send();
-
 function tc_cleanPage() {
-    arrElements.forEach(function (objQuery) {
+    tc_arrElements.forEach(function (objQuery) {
         var el = document.querySelector(objQuery.query);
         if (!tc_objSettings[objQuery.setting]) {
             return;
@@ -68,6 +51,7 @@ function tc_cleanPage() {
     });
 
     var arrElUsers = document.querySelectorAll(".username.js-action-profile-name"),
+        arrElHashtags = document.querySelectorAll(".twitter-hashtag"),
         i,
         el;
 
@@ -84,8 +68,6 @@ function tc_cleanPage() {
             });
         }
     }
-
-    var arrElHashtags = document.querySelectorAll(".twitter-hashtag");
 
     if (tc_objSettings.ignoreHashes) {
         for (i = 0; i < arrElHashtags.length; i++) {
@@ -122,7 +104,7 @@ function twit_clean_fnCallback(mutations) {
 
     });
 
-    arrElements.forEach(function (objQuery) {
+    tc_arrElements.forEach(function (objQuery) {
         var el = docFrag.querySelector(objQuery.query);
         if (!tc_objSettings[objQuery.setting]) {
             return;
@@ -139,17 +121,40 @@ function twit_clean_fnCallback(mutations) {
     tc_cleanPage();
 }
 
-var observer = new MutationObserver(twit_clean_fnCallback),
-    elTarget = document,
-    objConfig = {
-        childList: true,
-        subtree: true,
-        attributes: false,
-        characterData: false
+
+function tc_setupObserver() {
+    var observer = new MutationObserver(twit_clean_fnCallback),
+        elTarget = document,
+        objConfig = {
+            childList: true,
+            subtree: true,
+            attributes: false,
+            characterData: false
+        };
+
+    //then actually do some observing
+    observer.observe(elTarget, objConfig);
+}
+
+function tc_LoadSettings() {
+    tc_cleanPage();
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", chrome.extension.getURL("html/rhsSettings.html"), true);
+    xhr.onload = function (e) {
+        if (this.status === 200) {
+            var div = document.createElement("div");
+            div.innerHTML = e.target.responseText;
+            document.querySelector(".dashboard.dashboard-right").appendChild(div);
+
+            tc_elForm = document.querySelector("#twitCleanSettings");
+            tc_elForm.addEventListener("submit", tc_fnSaveSettings, false);
+
+            document.querySelector("#btnTCSave").addEventListener("click", tc_fnSaveSettings, false);
+            tc_fnSetupForm();
+            tc_setupObserver();
+        }
     };
 
-//then actually do some observing
-observer.observe(elTarget, objConfig);
-
-
-
+    xhr.send();
+}

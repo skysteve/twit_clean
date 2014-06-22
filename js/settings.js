@@ -6,7 +6,7 @@ var strStorageKey = "twitClean_settings",
     tc_elForm = document.querySelector("#twitCleanSettings");
 
 tc_objSettings = tc_objSettings ? JSON.parse(tc_objSettings) : {};
-tc_cleanPage();
+tc_LoadSettings();
 
 function tc_fnSaveSettings() {
     var el = tc_elForm.querySelector("#cbHideFollow");
@@ -28,6 +28,13 @@ function tc_fnSaveSettings() {
     localStorage.setItem(strStorageKey, JSON.stringify(tc_objSettings));
 
     tc_cleanPage();
+
+    document.querySelector("#divAlertSaved").setAttribute("style", "margin-top:10px");
+
+    setTimeout(function () {
+        document.querySelector("#divAlertSaved").setAttribute("style", "display: none; margin-top:10px");
+    }, 4000);
+
     return false;
 }
 

@@ -33,26 +33,9 @@ xhr.onload = function (e) {
 
 xhr.send();
 
-/**
- * Created by steve on 26/05/2014.
- */
-function twit_clean_fnCallback(mutations) {
-
-    var docFrag = document.createDocumentFragment();
-
-    mutations.forEach(function (mutation) {
-        if (mutation.addedNodes.length < 1) {
-            return;
-        }
-
-        for (var i = 0; i < mutation.addedNodes.length; i++) {
-            docFrag.appendChild(mutation.addedNodes[i].cloneNode(true));
-        }
-
-    });
-
+function tc_cleanPage() {
     arrElements.forEach(function (objQuery) {
-        var el = docFrag.querySelector(objQuery.query);
+        var el = document.querySelector(objQuery.query);
         if (!tc_objSettings[objQuery.setting]) {
             return;
         }
@@ -117,6 +100,43 @@ function twit_clean_fnCallback(mutations) {
             });
         }
     }
+}
+
+
+/**
+ * Created by steve on 26/05/2014.
+ */
+function twit_clean_fnCallback(mutations) {
+
+    var docFrag = document.createDocumentFragment(),
+        bSomethingTODO = false;
+
+    mutations.forEach(function (mutation) {
+        if (mutation.addedNodes.length < 1) {
+            return;
+        }
+
+        for (var i = 0; i < mutation.addedNodes.length; i++) {
+            docFrag.appendChild(mutation.addedNodes[i].cloneNode(true));
+        }
+
+    });
+
+    arrElements.forEach(function (objQuery) {
+        var el = docFrag.querySelector(objQuery.query);
+        if (!tc_objSettings[objQuery.setting]) {
+            return;
+        }
+
+        //if no match - bail out
+        if (!el) {
+            return;
+        }
+
+        bSomethingTODO = true;
+    });
+
+    tc_cleanPage();
 }
 
 var observer = new MutationObserver(twit_clean_fnCallback),

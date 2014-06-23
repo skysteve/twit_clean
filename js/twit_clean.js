@@ -30,27 +30,27 @@ function tc_getTweet(el) {
  * Here's the meaty/interesting bit, here was actually do the cleaning up
  * of the rhs and tweets
  */
-function tc_cleanPage() {
+function tc_cleanPage(docFrag) {
 
     //loop through elements we want to remove on the rhs (but this could be other elements at some point)
     tc_arrElements.forEach(function (objQuery) {
-
 
         //if setting doesn't say hide this element bail out - no point continuing
         if (!tc_objSettings[objQuery.setting]) {
             return;
         }
 
-        //otherwise find the element to remove in the dom
-        var el = document.querySelector(objQuery.query);
+        //otherwise find the element to remove in the documentFragment if we have one, otherwise search the dom
+        //(doc fragment is fast)
+        var el = docFrag ? docFrag.querySelector(objQuery.query) : document.querySelector(objQuery.query);
 
         //if no match - bail out
         if (!el) {
             return;
         }
 
-        //otherwise find the node in the dom
-        el = document.querySelector(objQuery.query);
+        //if we have a document fragment get the real one from the dom, otherwise use the element
+        el = docFrag ? document.querySelector(objQuery.query) : el;
 
         //check again - this shouldn't happen, but just incase
         if (!el) {
@@ -71,13 +71,22 @@ function tc_cleanPage() {
         el.parentNode.removeChild(el);
     });
 
+    //if we didn't get passed a document fragment, use the actual dom
+    if (!docFrag) {
+        docFrag = document;
+    }
+
     //get an array of hashtags and user tweets to remove (if any) - note don't query dom if we have nothing in settings
-    var arrElUsers = tc_objSettings.ignoreUsers ?  document.querySelectorAll(".username.js-action-profile-name") : [],
-        arrElHashtags = tc_objSettings.ignoreHashes ? document.querySelectorAll(".twitter-hashtag") : [],
+    var arrElUsers = tc_objSettings.ignoreUsers ?  docFrag.querySelectorAll(".username.js-action-profile-name") : [],
+        arrElHashtags = tc_objSettings.ignoreHashes ? docFrag.querySelectorAll(".twitter-hashtag") : [],
         i,
         el;
 
-    //TODO we should probably check the parent element is a tweet on the way through rather than just .parentElement.parentElement...
+    //if we've matched something and we had a fragment - query the actual dom to get the actual elements
+    //if we didn't get passed a document fragment don't re-query it's pointless - likewise if we matched nothing
+    if (arguments.length === 1 && arrElUsers.length > 0) {
+        arrElUsers = document.querySelectorAll(".username.js-action-profile-name");
+    }
 
     //if we have some user tweets to remove loop through them and remove them (we'll skip the loop if we're not ignoring any users)
     for (i = 0; i < arrElUsers.length; i++) {
@@ -91,6 +100,10 @@ function tc_cleanPage() {
                 el.parentElement.removeChild(el);
             }
         });
+    }
+
+    if (arguments.length === 1 && arrElHashtags.length > 0) {
+        arrElHashtags = document.querySelectorAll(".twitter-hashtag");
     }
 
     //this is basically the same as above but for hashtags
@@ -110,13 +123,10 @@ function tc_cleanPage() {
 
 /**
  * Callback function for our mutation observer to see if there's actually anything to do
- * TODO - this doesn't actually do anything smart because I broke it, it shouldn't call cleanPage if
- * no changes are detected but haven't thought of a smart way of doing that without duplicating code yet
  */
-function twit_clean_fnCallback(mutations) {
+function tc_fnCallback(mutations) {
 
-    var docFrag = document.createDocumentFragment(),
-        bSomethingTODO = false;
+    var docFrag = document.createDocumentFragment();
 
     mutations.forEach(function (mutation) {
         if (mutation.addedNodes.length < 1) {
@@ -129,21 +139,7 @@ function twit_clean_fnCallback(mutations) {
 
     });
 
-    tc_arrElements.forEach(function (objQuery) {
-        var el = docFrag.querySelector(objQuery.query);
-        if (!tc_objSettings[objQuery.setting]) {
-            return;
-        }
-
-        //if no match - bail out
-        if (!el) {
-            return;
-        }
-
-        bSomethingTODO = true;
-    });
-
-    tc_cleanPage();
+    tc_cleanPage(docFrag);
 }
 
 /**
@@ -151,7 +147,7 @@ function twit_clean_fnCallback(mutations) {
  * basically this watches for tweets loaded via infinite scroll
  */
 function tc_setupObserver() {
-    var observer = new MutationObserver(twit_clean_fnCallback),
+    var observer = new MutationObserver(tc_fnCallback),
         elTarget = document,
         objConfig = {
             childList: true,

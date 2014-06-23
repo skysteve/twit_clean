@@ -1,8 +1,8 @@
 /**
  * Created by steve on 21/06/2014.
  */
-var strStorageKey = "twitClean_settings",
-    tc_objSettings = localStorage.getItem(strStorageKey),
+var tc_strStorageKey = "twitClean_settings",
+    tc_objSettings = localStorage.getItem(tc_strStorageKey),
     tc_elForm = document.querySelector("#twitCleanSettings");
 
 tc_objSettings = tc_objSettings ? JSON.parse(tc_objSettings) : {};
@@ -33,7 +33,7 @@ function tc_fnSaveSettings() {
 
 
     //do the save
-    localStorage.setItem(strStorageKey, JSON.stringify(tc_objSettings));
+    localStorage.setItem(tc_strStorageKey, JSON.stringify(tc_objSettings));
 
     //refresh the content in page
     tc_cleanPage();

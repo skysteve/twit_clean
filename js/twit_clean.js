@@ -16,6 +16,16 @@ var tc_arrElements = [
     }
 ];
 
+function tc_getTweet(el) {
+    var strClassName = "tweet original-tweet";
+
+    while(el.className.indexOf(strClassName) === -1) {
+        el = el.parentElement;
+    }
+
+    return el;
+}
+
 /**
  * Here's the meaty/interesting bit, here was actually do the cleaning up
  * of the rhs and tweets
@@ -76,7 +86,7 @@ function tc_cleanPage() {
         //try to match users and remove the tweet if they match
         tc_objSettings.ignoreUsers.forEach(function (strUser) {
             if (el.textContent.toLowerCase() === strUser.toLowerCase().trim()) {
-                el = el.parentElement.parentElement.parentElement.parentElement;
+                el = tc_getTweet(el);
 
                 el.parentElement.removeChild(el);
             }
@@ -89,7 +99,7 @@ function tc_cleanPage() {
 
         tc_objSettings.ignoreHashes.forEach(function (strHashTag) {
             if (el.textContent.toLowerCase() === strHashTag.toLowerCase().trim()) {
-                el = el.parentElement.parentElement.parentElement;
+                el = tc_getTweet(el);
 
                 el.parentElement.removeChild(el);
             }

@@ -24,6 +24,8 @@ function tc_fnSaveSettings() {
     el = tc_elForm.querySelector("#cbHideFooter");
     tc_objSettings.hideFooter = el.checked;
 
+    el = tc_elForm.querySelector("#cbHideMoments");
+    tc_objSettings.hideMoments = el.checked;
 
     el = tc_elForm.querySelector("#taIgnoreHash");
     tc_objSettings.ignoreHashes = el.value.split(",");

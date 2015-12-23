@@ -13,6 +13,11 @@ var tc_arrElements = [
         query: ".js-items-container",
         parent : true,
         setting : "hideFooter"
+    },
+    {
+        query: ".js-moments-tab",
+        parent : false,
+        setting : "hideMoments"
     }
 ];
 

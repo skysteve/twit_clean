@@ -82,4 +82,9 @@ function tc_fnSetupForm() {
         el = tc_elForm.querySelector("#taIgnoreUsers");
         el.value = tc_objSettings.ignoreUsers.join(",");
     }
+
+    if (tc_objSettings.hideMoments) {
+        el = tc_elForm.querySelector("#cbHideMoments");
+        el.setAttribute("checked", "checked");
+    }
 }

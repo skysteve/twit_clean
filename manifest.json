@@ -1,6 +1,6 @@
 {
     "name": "Twit Clean",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Clean up unwanted tweets. Open source: https://github.com/skysteve/twit_clean",
     "content_scripts": [
         {

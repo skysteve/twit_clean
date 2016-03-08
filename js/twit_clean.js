@@ -186,7 +186,14 @@ function tc_LoadSettings() {
             //add the dom
             var div = document.createElement("div");
             div.innerHTML = resp.target.responseText;
-            document.querySelector(".dashboard.dashboard-right").appendChild(div);
+            var el = document.querySelector(".dashboard.dashboard-right");
+
+            if (!el) {
+                //TODO observe for the page changing to add the setting form in
+                return;
+            }
+
+            el.appendChild(div);
 
             //set our form element now we have one (var declared in settings.js)
             tc_elForm = document.querySelector("#twitCleanSettings");

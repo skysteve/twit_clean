@@ -27,6 +27,9 @@ function tc_fnSaveSettings() {
     el = tc_elForm.querySelector("#cbHideMoments");
     tc_objSettings.hideMoments = el.checked;
 
+    el = tc_elForm.querySelector("#cbHideWYWA");
+    tc_objSettings.hideWYWA = el.checked;
+
     el = tc_elForm.querySelector("#taIgnoreHash");
     tc_objSettings.ignoreHashes = el.value.split(",");
 
@@ -85,6 +88,11 @@ function tc_fnSetupForm() {
 
     if (tc_objSettings.hideMoments) {
         el = tc_elForm.querySelector("#cbHideMoments");
+        el.setAttribute("checked", "checked");
+    }
+
+    if (tc_objSettings.hideWYWA) {
+        el = tc_elForm.querySelector("#cbHideWYWA");
         el.setAttribute("checked", "checked");
     }
 }

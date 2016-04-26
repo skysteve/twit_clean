@@ -18,6 +18,11 @@ var tc_arrElements = [
         query: ".js-moments-tab",
         parent : false,
         setting : "hideMoments"
+    },
+    {
+        query: '[data-item-type="recap_entry"]',
+        parent: false,
+        setting: 'hideWYWA'
     }
 ];
 
